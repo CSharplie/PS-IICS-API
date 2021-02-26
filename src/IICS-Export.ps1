@@ -1,8 +1,6 @@
 . $PSScriptRoot\IICS-API.ps1
 . $PSScriptRoot\IICS-Objects.ps1
 
-$DebugPreference = "Continue" #SilentlyContinue 
-
 Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $Path, $ExportName = "Powershell Export") {
 	[System.Net.ServicePointManager]::Expect100Continue = $true
 	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
