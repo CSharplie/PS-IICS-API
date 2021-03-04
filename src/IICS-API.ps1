@@ -53,6 +53,7 @@ Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandat
     Try {
         Write-Debug "Try to call login API"
         $Result = Invoke-RestMethod -Proxy $Config.Proxy -Uri "$ConnectBaseURL/saas/public/core/v3/login" -Method Post -Body $Body -Headers $Headers
+
         Write-Debug "Set global variables:"
         Write-Debug "- Global:IICSSessionID = '$($Result.userInfo.sessionId)'"
         Write-Debug "- Global:IICSBaseURL = '$($Result.products.baseApiUrl)'"
@@ -60,6 +61,7 @@ Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandat
 
         $Global:IICSSessionID = $Result.userInfo.sessionId
         $Global:IICSBaseURL = $Result.products.baseApiUrl
+        $Global:IICSRunBaseUrl = $Result.products.baseApiUrl -replace "/saas", $null
         $Global:IICSProxy = $Proxy
     }
     Catch [System.Net.WebException] {

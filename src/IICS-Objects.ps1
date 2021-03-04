@@ -31,7 +31,6 @@ Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip 
         $Result = $Objects.objects 
     }
     Catch [System.Net.WebException] {
-        $_
         Throw IICS-Get-HttpErrorDetail -Exception $_
     }
     Catch {
