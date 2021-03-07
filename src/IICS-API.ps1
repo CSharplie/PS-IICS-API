@@ -68,7 +68,7 @@ Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandat
 
     Try {
         Write-Debug "Try to call login API"
-        $Result = Invoke-RestMethod -Proxy $Config.Proxy -Uri "$ConnectBaseURL/saas/public/core/v3/login" -Method Post -Body $Body -Headers $Headers
+        $Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$ConnectBaseURL/saas/public/core/v3/login" -Method Post -Body $Body -Headers $Headers
 
         $Global:IICSSessionID = $Result.userInfo.sessionId
         $Global:IICSBaseURL = $Result.products.baseApiUrl

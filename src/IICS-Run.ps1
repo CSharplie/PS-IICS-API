@@ -44,7 +44,7 @@ Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)]
     $RunID = $Null
 	try {
         $Headers = IICS-Get-Headers-V3
-		$Result = Invoke-RestMethod -Proxy $Proxy -Uri "$($Global:IICSRunBaseUrl)/active-bpel/rt/$PublishName" -Method GET -Headers $Headers
+		$Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/active-bpel/rt/$PublishName" -Method GET -Headers $Headers
 		$RunID = $Result.RunId
 		Write-Debug "Started with RunID '$RunID'"
 	}
@@ -59,7 +59,7 @@ Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)]
 		try {
 			Start-Sleep -Seconds 10
             $Headers = IICS-Get-Headers-V3
-			$Result = Invoke-RestMethod -Proxy $Proxy -Uri "$($Global:IICSRunBaseUrl)/active-bpel/services/tf/status/$RunID" -Method GET -Headers $Headers
+			$Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/active-bpel/services/tf/status/$RunID" -Method GET -Headers $Headers
 			If($Result.Status -ne "RUNNING") {
 				if($Result.Status -eq "SUCCESS"){
 					Write-Debug "Job done successfully"
