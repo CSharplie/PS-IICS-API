@@ -83,3 +83,62 @@ Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)]
 	}
 }
 
+Function IICS-Run-MassIngestion ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name) {
+    [System.Net.ServicePointManager]::Expect100Continue = $true
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    Write-Debug "Call IICS-Run-MassIngestion function with parameters:"
+    Write-Debug "- Path = '$Path'"
+    Write-Debug "- Name = '$Name'"
+
+    IICS-Check-Connection
+
+    $MassIngestion = IICS-Get-Run-Object -Path $Path -Name $Name -ObjectType "MI_TASK" 
+  
+    If($Null -eq $MassIngestion){
+        throw "$Path/$Name mass ingestion do not exists"
+    }
+
+    Write-Debug "Object found with ID '$($MassIngestion.id)'"
+
+    $RunID = $Null
+	try {
+        Write-Debug "Start mass ingestion job"
+        $Headers = IICS-Get-Headers-V1
+        $Body = "{`"taskId`":`"$($MassIngestion.id)`"}"
+		$Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/mftsaas/api/v1/job" -Method Post -Headers $Headers -Body $Body
+        
+        $RunID = $Result.RunId
+		Write-Debug "Started with RunID '$RunID'"
+	}
+    Catch [System.Net.WebException] {
+        Throw IICS-Get-HttpErrorDetail -Exception $_
+    }
+    Catch {
+        Throw $_ 
+    }
+
+	While($True) {
+		Try {
+			Start-Sleep -Seconds 10
+			$Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/mftsaas/api/v1/job/$RunID/status" -Method GET -Headers $Headers
+			
+            If($Result.jobStatus -eq "SUCCESS") {
+                Write-Debug "The Mass Tngestion task is done"
+                Return $true
+            }
+            ElseIf($Result.jobStatus -ne "RUNNING") {
+                Write-Debug "The Mass Tngestion task is fail"
+				Return $False
+			}
+			else {
+				Write-Debug "Waiting job ending"
+			}
+		}
+        Catch [System.Net.WebException] {
+            Throw IICS-Get-HttpErrorDetail -Exception $_
+        }
+        Catch {
+            Throw $_ 
+        }
+	}
+}
