@@ -1,16 +1,7 @@
 . $PSScriptRoot\IICS-API.ps1
 . $PSScriptRoot\IICS-Objects.ps1
 
-Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name, $PublishName) {
-    [System.Net.ServicePointManager]::Expect100Continue = $true
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
-    Write-Debug "Call IICS-Run-Taskflow function with parameters:"
-    Write-Debug "- Path = '$Path'"
-    Write-Debug "- Name = '$Name'"
-    Write-Debug "- PublishName = '$PublishName'"
-
-    IICS-Check-Connection
-
+Function IICS-Get-Run-Object([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name, [Parameter(Mandatory)] $ObjectType) {
     if($Path.EndsWith("/")){
         $Path = $Path.Remove($Path.Length - 1)
     }
@@ -22,12 +13,25 @@ Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)]
         $PublishName = $Name
     }
 
-
-    $Query = "type==TASKFLOW and location==$Path"
+    $Query = "type==$ObjectType and location==$Path"
     Write-Debug "Get objects with quey Query $Query"
 
     $Objects = IICS-Get-Object-List -Query $Query
-    $Taskflow = $Objects | Where-Object { $_.path -eq "$Path/$Name" }
+    Return $Objects | Where-Object { $_.path -eq "$Path/$Name" }
+}
+
+Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name, $PublishName) {
+    [System.Net.ServicePointManager]::Expect100Continue = $true
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    Write-Debug "Call IICS-Run-Taskflow function with parameters:"
+    Write-Debug "- Path = '$Path'"
+    Write-Debug "- Name = '$Name'"
+    Write-Debug "- PublishName = '$PublishName'"
+
+    IICS-Check-Connection
+
+    $Object = IICS-Get-Run-Object -Path $Path -Name $Name
+    $Taskflow = IICS-Get-Run-Object -Path $Path -Name $Name -ObjectType "TASKFLOW"
 
     If($Null -eq $Taskflow){
         throw "$Path/$Name taskflow do not exists"
@@ -77,5 +81,5 @@ Function IICS-Run-Taskflow ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)]
             Throw $_ 
         }
 	}
-
 }
+
