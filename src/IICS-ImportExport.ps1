@@ -7,6 +7,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $Path
     Write-Debug "Call IICS-Export function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- Path = '$Path'"
+    Write-Debug "- ExportName = '$ExportName'"
 
     IICS-Check-Connection
 
