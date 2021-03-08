@@ -6,7 +6,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     Write-Debug "Call IICS-Export function with parameters:"
     Write-Debug "- Query = '$Query'"
-    Write-Debug "- Path = '$Path'"
+    Write-Debug "- FilePath = '$FilePath'"
     Write-Debug "- ExportName = '$ExportName'"
 
     IICS-Check-Connection
@@ -73,7 +73,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
         Write-Debug "Try to call login API"
 
         $Headers = @{ "INFA-SESSION-ID" = $Global:IICSSessionID }
-        Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export/$ExportID/package" -Method Get -Headers $Headers -OutFile $FilePath -ContentType "application/octet-stream"  > $Null
+        Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export/$ExportID/package" -Method Get -Headers $Headers -OutFile $Path -ContentType "application/octet-stream"  > $Null
         Write-Debug "Download done"
     }
     Catch [System.Net.WebException] {
