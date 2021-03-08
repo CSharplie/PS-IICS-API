@@ -14,4 +14,5 @@ Use Connect-IICS-API to connect to the IICS API
 ### Sample
 
     # Connect to API
-    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    $SecurePassword  =  ConvertTo-SecureString "MiaouMiaou" -AsPlainText -Force
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password $SecurePassword

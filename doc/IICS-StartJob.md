@@ -43,7 +43,8 @@ False if the run if fail
 ### Sample
 
     # Connect to API
-    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    $SecurePassword  =  ConvertTo-SecureString "MiaouMiaou" -AsPlainText -Force
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password $SecurePassword
 
     # Start a mass ingestion
     Start-IICS-MassIngestion-Job -Path "/ProjectOfMyCat/Folder/" -Name "mi_import_data"

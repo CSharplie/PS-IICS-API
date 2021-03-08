@@ -26,7 +26,8 @@ Use Get-IICS-Objects to get a list of objects with all details
 ### Sample
 
     # Connect to API
-    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    $SecurePassword  =  ConvertTo-SecureString "MiaouMiaou" -AsPlainText -Force
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password $SecurePassword
 
     # Get a list of mapping task
     Get-IICS-Objects -Query "type=='MTT'" | ForEach-Object {

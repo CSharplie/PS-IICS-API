@@ -60,10 +60,13 @@ Function Confirm-IICS-Connection() {
     }
 }
 
-Function Connect-IICS-API ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] $Password, $Proxy) {
+Function Connect-IICS-API ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] [SecureString] $Password, $Proxy) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     $ErrorActionPreference = "Stop"
+
+    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password);  
+    $LoginPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 
     Write-Debug "Call Connect-IICS-API function with parameters:"
     Write-Debug "- ConnectBaseURL = '$ConnectBaseURL'"
@@ -75,7 +78,7 @@ Function Connect-IICS-API ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Ma
 
     $Body = @{
         username = $Username
-        password = $Password
+        password = $LoginPassword
     } | ConvertTo-Json
 
     Try {
