@@ -14,7 +14,7 @@ Use IICS-Export function to export a zip file.
     # Connect to API
     IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
 
-    $ExportResult = IICS-Export -Query "type=='MTT'" -Path "C:\Exports\my_iics_export.zip"
+    $ExportResult = IICS-Export -Query "type=='MTT'" -FilePath "C:\Exports\my_iics_export.zip"
     If($ExportResult) {
         Write-Host "Yay!"
     }

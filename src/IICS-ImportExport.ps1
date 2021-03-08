@@ -1,7 +1,7 @@
 . $PSScriptRoot\IICS-API.ps1
 . $PSScriptRoot\IICS-Objects.ps1
 
-Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $Path, $ExportName = "Powershell Export") {
+Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $FilePath, $ExportName = "Powershell Export") {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     Write-Debug "Call IICS-Export function with parameters:"
@@ -73,7 +73,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $Path
         Write-Debug "Try to call login API"
 
         $Headers = @{ "INFA-SESSION-ID" = $Global:IICSSessionID }
-        Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export/$ExportID/package" -Method Get -Headers $Headers -OutFile $Path -ContentType "application/octet-stream"  > $Null
+        Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export/$ExportID/package" -Method Get -Headers $Headers -OutFile $FilePath -ContentType "application/octet-stream"  > $Null
         Write-Debug "Download done"
     }
     Catch [System.Net.WebException] {
