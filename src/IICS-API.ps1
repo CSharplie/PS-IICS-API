@@ -51,8 +51,8 @@ Function IICS-Check-Connection() {
 }
 
 Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] $Password, $Proxy) {
-	[System.Net.ServicePointManager]::Expect100Continue = $true
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    [System.Net.ServicePointManager]::Expect100Continue = $true
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     Write-Debug "Call IICS-Connect function with parameters:"
     Write-Debug "- ConnectBaseURL = '$ConnectBaseURL'"
     Write-Debug "- UserName = '$UserName'"

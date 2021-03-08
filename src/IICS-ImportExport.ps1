@@ -2,8 +2,8 @@
 . $PSScriptRoot\IICS-Objects.ps1
 
 Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $Path, $ExportName = "Powershell Export") {
-	[System.Net.ServicePointManager]::Expect100Continue = $true
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    [System.Net.ServicePointManager]::Expect100Continue = $true
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     Write-Debug "Call IICS-Export function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- Path = '$Path'"

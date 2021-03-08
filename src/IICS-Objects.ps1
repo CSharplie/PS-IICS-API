@@ -2,7 +2,7 @@
 
 Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip = 0, $Page = 1) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
-	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
     Write-Debug "Call IICS-Get-Object-List function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- Limit = '$Limit'"
