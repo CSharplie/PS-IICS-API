@@ -1,7 +1,7 @@
 # API Export functions 
 ## Export IICS zip package
 ### Description
-Use IICS-Export function to export a zip file.
+Use Export-IICS-Package function to export a zip file.
 
 ### Parameters
 |Name|Mandatory|Description|
@@ -12,9 +12,9 @@ Use IICS-Export function to export a zip file.
 ### Sample
 
     # Connect to API
-    IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
 
-    $ExportResult = IICS-Export -Query "type=='MTT'" -FilePath "C:\Exports\my_iics_export.zip"
+    $ExportResult = Export-IICS-Package -Query "type=='MTT'" -FilePath "C:\Exports\my_iics_export.zip"
     If($ExportResult) {
         Write-Host "Yay!"
     }

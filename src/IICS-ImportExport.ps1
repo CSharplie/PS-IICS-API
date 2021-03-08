@@ -1,18 +1,18 @@
 . $PSScriptRoot\IICS-API.ps1
 . $PSScriptRoot\IICS-Objects.ps1
 
-Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $FilePath, $ExportName = "Powershell Export") {
+Function Export-IICS-Package([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $FilePath, $ExportName = "Powershell Export") {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
-    Write-Debug "Call IICS-Export function with parameters:"
+    Write-Debug "Call Export-IICS-Package function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- FilePath = '$FilePath'"
     Write-Debug "- ExportName = '$ExportName'"
 
-    IICS-Check-Connection
+    Confirm-IICS-Connection
 
     Write-Debug "Get list of objects to exports"
-    $Objects = IICS-Get-Object-List $Query
+    $Objects = Get-IICS-Objects $Query
     Write-Debug "$($Objects.Count) object(s) to export"
     $ObjectsIDs = $Objects | Select-Object -Property id
 
@@ -25,14 +25,14 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
     Try {
         Write-Debug "Try to call login API"
 
-        $Headers = IICS-Get-Headers-V3
+        $Headers = Get-IICS-Headers-V3
         $Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export" -Method Post -Body $Body -Headers $Headers
         
         Write-Debug "Export in progress with ID :'$($Result.id)'"
         $ExportID = $Result.id
     }
     Catch [System.Net.WebException] {
-        Throw IICS-Get-HttpErrorDetail -Exception $_
+        Throw Get-IICS-HttpErrorDetail -Exception $_
     }
     Catch {
         Throw $_ 
@@ -46,7 +46,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
         Try{
             Write-Debug "Try to call login API"
 
-            $Headers = IICS-Get-Headers-V3
+            $Headers = Get-IICS-Headers-V3
             $Result = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/export/$ExportID" -Method Get -Headers $Headers
             
             $ExportStatus = $Result.status.state
@@ -61,7 +61,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
             }
         }
         Catch [System.Net.WebException] {
-            Throw IICS-Get-HttpErrorDetail -Exception $_
+            Throw Get-IICS-HttpErrorDetail -Exception $_
         }
         Catch {
             Throw $_ 
@@ -77,7 +77,7 @@ Function IICS-Export([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $File
         Write-Debug "Download done"
     }
     Catch [System.Net.WebException] {
-        Throw IICS-Get-HttpErrorDetail -Exception $_
+        Throw Get-IICS-HttpErrorDetail -Exception $_
     }
     Catch {
         Throw $_ 

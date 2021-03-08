@@ -1,4 +1,4 @@
-Function IICS-Get-HttpErrorDetail([Parameter(Mandatory)] $Exception) {
+Function Get-IICS-HttpErrorDetail([Parameter(Mandatory)] $Exception) {
     Try {
         $Response = $Exception.Exception.Response
 
@@ -20,14 +20,14 @@ Function IICS-Get-HttpErrorDetail([Parameter(Mandatory)] $Exception) {
     }
 }
 
-Function IICS-Get-Headers-V1() {
+Function Get-IICS-Headers-V1() {
     Return @{
         "IDS-SESSION-ID" = $Global:IICSSessionID
         "Content-Type" = "application/json;charset=UTF-8"
         "Accept" = "application/json"
     }
 }
-Function IICS-Get-Headers-V2() {
+Function Get-IICS-Headers-V2() {
     Return @{
         "icSessionId" = $Global:IICSSessionID
         "Content-Type" = "application/json;charset=UTF-8"
@@ -35,7 +35,7 @@ Function IICS-Get-Headers-V2() {
     }
 }
 
-Function IICS-Get-Headers-V3() {
+Function Get-IICS-Headers-V3() {
     Return @{
         "Content-Type" = "application/json;charset=UTF-8"
         "INFA-SESSION-ID" = $Global:IICSSessionID
@@ -44,16 +44,16 @@ Function IICS-Get-Headers-V3() {
 }
 
 
-Function IICS-Check-Connection() {
+Function Confirm-IICS-Connection() {
     If($Null -eq $Global:IICSSessionID) {
-        Throw "Not connected to API. Please use IICS-Connect function"
+        Throw "Not connected to API. Please use Connect-IICS-API function"
     }
 }
 
-Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] $Password, $Proxy) {
+Function Connect-IICS-API ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] $Password, $Proxy) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
-    Write-Debug "Call IICS-Connect function with parameters:"
+    Write-Debug "Call Connect-IICS-API function with parameters:"
     Write-Debug "- ConnectBaseURL = '$ConnectBaseURL'"
     Write-Debug "- UserName = '$UserName'"
     Write-Debug "- Password = '******'"
@@ -82,7 +82,7 @@ Function IICS-Connect ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandat
         Write-Debug "- Global:IICSProxy = '$Global:IICSProxy'"
     }
     Catch [System.Net.WebException] {
-        Throw IICS-Get-HttpErrorDetail -Exception $_
+        Throw Get-IICS-HttpErrorDetail -Exception $_
     }
     Catch {
         Throw $_ 

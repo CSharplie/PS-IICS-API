@@ -1,7 +1,7 @@
 # API Object functions 
 ## Get list of objects
 ### Description
-Use IICS-Get-Object-List to get a list of objects with all details
+Use Get-IICS-Objects to get a list of objects with all details
 
 ### Parameters
 |Name|Mandatory|Description|
@@ -26,10 +26,10 @@ Use IICS-Get-Object-List to get a list of objects with all details
 ### Sample
 
     # Connect to API
-    IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
 
     # Get a list of mapping task
-    IICS-Get-Object-List -Query "type=='MTT'" | ForEach-Object {
+    Get-IICS-Objects -Query "type=='MTT'" | ForEach-Object {
         Write-Host "$($_.id) is updated from $($_.updateTime)"
     }
 

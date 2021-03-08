@@ -1,7 +1,7 @@
 # API Run functions 
 ## Run a published taskflow
 ### Description
-Use IICS-Run-Taskflow to start a published taskflow
+Use Start-IICS-Taskflow-Job to start a published taskflow
 
 ### Parameters
 |Name|Mandatory|Description|
@@ -19,14 +19,14 @@ False if the run if fail
 ### Sample
 
     # Connect to API
-    IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
 
     # Start a taskflow
-    IICS-Run-Taskflow -Path "/ProjectOfMyCat/Folder/" -Name "tf_export_data" -PublishName "tf_export_data-1"
+    Start-IICS-Taskflow-Job -Path "/ProjectOfMyCat/Folder/" -Name "tf_export_data" -PublishName "tf_export_data-1"
 
 ## Run a mass ingestion task
 ### Description
-Use IICS-Run-MassIngestion to start a mass ingestion task
+Use Start-IICS-MassIngestion-Job to start a mass ingestion task
 
 ### Parameters
 |Name|Mandatory|Description|
@@ -43,10 +43,10 @@ False if the run if fail
 ### Sample
 
     # Connect to API
-    IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
 
     # Start a mass ingestion
-    IICS-Run-MassIngestion -Path "/ProjectOfMyCat/Folder/" -Name "mi_import_data"
+    Start-IICS-MassIngestion-Job -Path "/ProjectOfMyCat/Folder/" -Name "mi_import_data"
 
 ## Dependencies
 * IICS-API

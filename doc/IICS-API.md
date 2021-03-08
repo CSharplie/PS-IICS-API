@@ -1,7 +1,7 @@
 # API Core functions 
 ## Connect to API
 ### Description
-Use IICS-Connect to connect to the IICS API
+Use Connect-IICS-API to connect to the IICS API
 
 ### Parameters
 |Name|Mandatory|Description|
@@ -14,4 +14,4 @@ Use IICS-Connect to connect to the IICS API
 ### Sample
 
     # Connect to API
-    IICS-Connect -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"
+    Connect-IICS-API -ConnectBaseURL "https://dm-em.informaticacloud.com" -UserName "PixelCat" -Password "MiaouMiaou"

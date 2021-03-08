@@ -1,16 +1,16 @@
 . $PSScriptRoot\IICS-API.ps1
 
-Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip = 0, $Page = 1) {
+Function Get-IICS-Objects ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip = 0, $Page = 1) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
-    Write-Debug "Call IICS-Get-Object-List function with parameters:"
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    Write-Debug "Call Get-IICS-Objects function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- Limit = '$Limit'"
     Write-Debug "- Skip = '$Skip'"
     Write-Debug "- Page = '$Page'"
     $Result = $Null
 
-    IICS-Check-Connection
+    Confirm-IICS-Connection
 
     Try {
         $QueryLimit = $Limit
@@ -20,7 +20,7 @@ Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip 
         }
 
         Write-Debug "Try to call login API"
-        $Headers = IICS-Get-Headers-V3
+        $Headers = Get-IICS-Headers-V3
         $Objects = Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSBaseURL)/public/core/v3/objects?q=$Query&limit=$QueryLimit&skip=$Skip" -Method GET -Headers $Headers
         
         if($Null -eq $Objects.objects) {
@@ -31,7 +31,7 @@ Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip 
         $Result = $Objects.objects 
     }
     Catch [System.Net.WebException] {
-        Throw IICS-Get-HttpErrorDetail -Exception $_
+        Throw Get-IICS-HttpErrorDetail -Exception $_
     }
     Catch {
         Throw $_ 
@@ -41,7 +41,7 @@ Function IICS-Get-Object-List ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip 
         Write-Debug "Recall API to get others results"
         $NewSkip =  $Page * 200
         $NewPage = $Page + 1
-        $Result += IICS-Get-Object-List -Query $Query -Limit 0 -Skip $NewSkip -Page $NewPage
+        $Result += Get-IICS-Objects -Query $Query -Limit 0 -Skip $NewSkip -Page $NewPage
     }
 
     Return $Result
