@@ -4,6 +4,8 @@
 Function Export-IICS-Package([Parameter(Mandatory)] $Query, [Parameter(Mandatory)] $FilePath, $ExportName = "Powershell Export") {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    $ErrorActionPreference = "Stop"
+    
     Write-Debug "Call Export-IICS-Package function with parameters:"
     Write-Debug "- Query = '$Query'"
     Write-Debug "- FilePath = '$FilePath'"

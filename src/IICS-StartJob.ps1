@@ -2,6 +2,8 @@
 . $PSScriptRoot\IICS-Objects.ps1
 
 Function Get-IICS-Run-Object([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name, [Parameter(Mandatory)] $ObjectType) {
+    $ErrorActionPreference = "Stop"
+    
     if($Path.EndsWith("/")){
         $Path = $Path.Remove($Path.Length - 1)
     }
@@ -23,6 +25,8 @@ Function Get-IICS-Run-Object([Parameter(Mandatory)] $Path, [Parameter(Mandatory)
 Function Start-IICS-Taskflow-Job ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name, $PublishName) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    $ErrorActionPreference = "Stop"
+
     Write-Debug "Call Start-IICS-Taskflow-Job function with parameters:"
     Write-Debug "- Path = '$Path'"
     Write-Debug "- Name = '$Name'"
@@ -84,7 +88,8 @@ Function Start-IICS-Taskflow-Job ([Parameter(Mandatory)] $Path, [Parameter(Manda
 
 Function Start-IICS-MassIngestion-Job ([Parameter(Mandatory)] $Path, [Parameter(Mandatory)] $Name) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;$ErrorActionPreference = "Stop"
+
     Write-Debug "Call Start-IICS-MassIngestion-Job function with parameters:"
     Write-Debug "- Path = '$Path'"
     Write-Debug "- Name = '$Name'"

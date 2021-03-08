@@ -1,4 +1,6 @@
 Function Get-IICS-HttpErrorDetail([Parameter(Mandatory)] $Exception) {
+    $ErrorActionPreference = "Stop"
+    
     Try {
         $Response = $Exception.Exception.Response
 
@@ -21,6 +23,8 @@ Function Get-IICS-HttpErrorDetail([Parameter(Mandatory)] $Exception) {
 }
 
 Function Get-IICS-Headers-V1() {
+    $ErrorActionPreference = "Stop"
+    
     Return @{
         "IDS-SESSION-ID" = $Global:IICSSessionID
         "Content-Type" = "application/json;charset=UTF-8"
@@ -28,6 +32,8 @@ Function Get-IICS-Headers-V1() {
     }
 }
 Function Get-IICS-Headers-V2() {
+    $ErrorActionPreference = "Stop"
+
     Return @{
         "icSessionId" = $Global:IICSSessionID
         "Content-Type" = "application/json;charset=UTF-8"
@@ -36,6 +42,8 @@ Function Get-IICS-Headers-V2() {
 }
 
 Function Get-IICS-Headers-V3() {
+    $ErrorActionPreference = "Stop"
+
     Return @{
         "Content-Type" = "application/json;charset=UTF-8"
         "INFA-SESSION-ID" = $Global:IICSSessionID
@@ -45,6 +53,8 @@ Function Get-IICS-Headers-V3() {
 
 
 Function Confirm-IICS-Connection() {
+    $ErrorActionPreference = "Stop"
+
     If($Null -eq $Global:IICSSessionID) {
         Throw "Not connected to API. Please use Connect-IICS-API function"
     }
@@ -53,6 +63,8 @@ Function Confirm-IICS-Connection() {
 Function Connect-IICS-API ([Parameter(Mandatory)] $ConnectBaseURL, [Parameter(Mandatory)] $UserName, [Parameter(Mandatory)] $Password, $Proxy) {
     [System.Net.ServicePointManager]::Expect100Continue = $true
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    $ErrorActionPreference = "Stop"
+
     Write-Debug "Call Connect-IICS-API function with parameters:"
     Write-Debug "- ConnectBaseURL = '$ConnectBaseURL'"
     Write-Debug "- UserName = '$UserName'"
