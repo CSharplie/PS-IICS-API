@@ -30,7 +30,19 @@ Function Get-IICS-Objects ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip = 0,
             Return @()
         }
         Write-Debug "$($Objects.objects.Count) object(s) founds"
-        $Result = $Objects.objects 
+
+        $Output = @();
+        $Objects.objects | ForEach-Object {
+            if($_.Type -eq "MI_TASK") {
+                Write-Debug "Mass ingestion detected, get all details"
+                $Output +=  Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/mftsaas/api/v1/mitasks/$($_.Id)" -Method GET -Headers (Get-IICS-Headers-V1)
+            }
+            Else {
+                $Output += $_
+            }
+        }
+
+        $Result = $Output
     }
     Catch [System.Net.WebException] {
         Throw Get-IICS-HttpErrorDetail -Exception $_
