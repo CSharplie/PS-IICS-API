@@ -61,3 +61,31 @@ Function Get-IICS-Objects ([Parameter(Mandatory)] $Query, $Limit = 0, $Skip = 0,
     Return $Result
 }
 
+Function Update-IICS-Object ([Parameter(Mandatory)] $ObjectID, [Parameter(Mandatory)] $ObjectType, [Parameter(Mandatory)] $Object) {
+    [System.Net.ServicePointManager]::Expect100Continue = $true
+	[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+    $ErrorActionPreference = "Stop"
+
+    Write-Debug "Call Update-IICS-Object function with parameters:"
+    Write-Debug "- ObjectID = '$ObjectID'"
+    Write-Debug "- ObjectType = '$ObjectType'"
+
+    Confirm-IICS-Connection
+
+    Try {
+        if($ObjectType -eq "MI_TASK") {
+            if(@($Object.Name, $Object.SourceConnection, $Object.targetConnection, $Object.sourceType).Contains($Null)) { 
+                throw "A mandadory value is not supplied. Please check `"Object`" parameter"
+            }
+
+            $Body = ConvertTo-Json $Object -Depth 100
+            Invoke-RestMethod -Proxy $Global:IICSProxy -Uri "$($Global:IICSRunBaseUrl)/mftsaas/api/v1/mitasks/$ObjectID" -Method Put -Headers (Get-IICS-Headers-V1) -Body $Body
+        }
+    }
+    Catch [System.Net.WebException] {
+        Throw Get-IICS-HttpErrorDetail -Exception $_
+    }
+    Catch {
+        Throw $_ 
+    }
+}
